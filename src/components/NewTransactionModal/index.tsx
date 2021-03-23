@@ -9,6 +9,7 @@ import {
   StyledTransactionTypeContainer,
   StyledRadioBox,
 } from "./styles";
+import api from "../../services/api";
 
 interface NewTransactionModalProps {
   isOpen: boolean;
@@ -26,6 +27,15 @@ const NewTransactionModal = ({
 
   function handleCreateNewTransaction(event: React.FormEvent) {
     event.preventDefault();
+
+    const data = {
+      title,
+      value,
+      category,
+      type,
+    };
+
+    api.post("/transactions", data);
   }
 
   return (
@@ -43,7 +53,7 @@ const NewTransactionModal = ({
         <img src={closeImg} alt="Fechar modal" />
       </button>
 
-      <StyledContainer>
+      <StyledContainer onSubmit={handleCreateNewTransaction}>
         <h2>Cadastrar transação</h2>
 
         <input
@@ -59,7 +69,7 @@ const NewTransactionModal = ({
           onChange={(event) => setValue(Number(event.target.value))}
         />
 
-        <StyledTransactionTypeContainer onSubmit={handleCreateNewTransaction}>
+        <StyledTransactionTypeContainer>
           <StyledRadioBox
             isActive={type === "deposit"}
             activeColor="green"
