@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import { createServer, Model } from "miragejs";
 import { GlobalStyle } from "./styles/global";
 import NewTransactionModal from "./components/NewTransactionModal";
+import { TransactionsProvider } from "./hooks/useTransactions";
 
 createServer({
   models: {
@@ -45,7 +46,7 @@ createServer({
     this.post("/transactions", (schema, request) => {
       const data = JSON.parse(request.requestBody);
 
-      return schema.create("transation", data);
+      return schema.create("transaction", data);
     });
   },
 });
@@ -66,15 +67,18 @@ function App() {
   }
 
   return (
-    <div>
+    <TransactionsProvider>
       <Header onOpenNewTransactionModal={handleOpenNewTransactionModal} />
+
       <Dashboard />
+
       <GlobalStyle />
+
       <NewTransactionModal
         onRequestClose={handleCloseNewTransactionModal}
         isOpen={isNewTransactionModalOpen}
       />
-    </div>
+    </TransactionsProvider>
   );
 }
 

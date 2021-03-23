@@ -9,7 +9,7 @@ import {
   StyledTransactionTypeContainer,
   StyledRadioBox,
 } from "./styles";
-import api from "../../services/api";
+import { useTransactions } from "../../hooks/useTransactions";
 
 interface NewTransactionModalProps {
   isOpen: boolean;
@@ -20,22 +20,28 @@ const NewTransactionModal = ({
   isOpen,
   onRequestClose,
 }: NewTransactionModalProps) => {
+  const { createTransaction } = useTransactions();
+
   const [type, setType] = useState("deposit");
   const [title, setTitle] = useState("");
   const [value, setValue] = useState(0);
   const [category, setCategory] = useState("");
 
-  function handleCreateNewTransaction(event: React.FormEvent) {
+  async function handleCreateNewTransaction(event: React.FormEvent) {
     event.preventDefault();
 
-    const data = {
+    await createTransaction({
       title,
-      value,
+      amount: value,
       category,
       type,
-    };
+    });
 
-    api.post("/transactions", data);
+    setTitle("");
+    setValue(0);
+    setCategory("");
+    setType("deposit");
+    onRequestClose();
   }
 
   return (
